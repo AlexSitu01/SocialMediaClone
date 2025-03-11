@@ -1,3 +1,4 @@
+import { useState } from "react"
 
 interface User {
     id: number
@@ -16,26 +17,38 @@ interface PostProps {
     desc: string
     pic: string
     numLikes: number
+    timeOfPost: number
+    comments: Comment
 }
 
-export default function Post({ author, desc, pic, numLikes = 0 }: PostProps) {
+
+export default function Post({ author, desc, pic, numLikes = 0, timeOfPost }: PostProps) {
+    const [likeCount, setLikeCount] = useState(0)
+    const [likeButtonColor, setLikeButtonColor] = useState("white")
+
+
+
+
     return <>
-        <div className="flex flex-col my-5">
-            <div className="flex items-center my-2 space-x-3">
+        <div className="flex flex-col w-[401px]">
+           
+            <div className="flex items-center mb-2 space-x-3">
                 {/* profile picture */}
-                <div className="w-[20px] h-[20px] rounded-full"><img src={author.pic} alt="" /></div>
+                <div className=""><img className="w-[35px] h-[35px] rounded-full object-cover" src={author.pic} alt="" /></div>
 
                 {/* author name */}
-                <div className="max-w-[201px] text-lg">{author.name}</div>
+                <div className="text-lg font-bold">{author.name}</div>
+                {/* Time of post */}
+                <div className=""></div>
             </div>
 
             {/* picture */}
-            <div className="flex justify-center"><img className="max-w-[201px]" src={pic} alt="" /></div>
+            <div className="flex justify-center"><img className="w-[401px] rounded-sm" src={pic} alt="" /></div>
 
             <div className="flex space-x-2 w-full my-3">
                 {/* heart */}
-                <button className="cursor-pointer">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                <button className={"cursor-pointer"} onClick={() => setLikeButtonColor(likeButtonColor === "white" ? "red" : "white")}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill={likeButtonColor} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                     </svg>
                 </button>
@@ -56,9 +69,10 @@ export default function Post({ author, desc, pic, numLikes = 0 }: PostProps) {
                 </button>
             </div>
             {/* like count */}
-            <div className="mb-1">{numLikes} likes</div>
+            <div className="mb-1 font-bold">{numLikes} likes</div>
 
             <div className="">{desc}</div>
+            <hr className="border-gray-400 h-1 my-3"/>
 
         </div>
     </>
