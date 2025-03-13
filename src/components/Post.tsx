@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Abc, CommentsDialog } from "./CommentsDialog"
 
 interface User {
     id: number
@@ -22,28 +23,28 @@ interface PostProps {
 }
 
 
-export default function Post({ author, desc, pic, numLikes = 0, timeOfPost }: PostProps) {
-    const [likeCount, setLikeCount] = useState(0)
+export default function Post({ author, desc, pic, numLikes = 0, timeOfPost, comments}: PostProps) {
     const [likeButtonColor, setLikeButtonColor] = useState("white")
+    const [isCommentsOpen, setIsCommentsOpen] = useState(false)
 
 
 
 
     return <>
-        <div className="flex flex-col w-[401px]">
+        <div className="flex flex-col w-[25rem]">
            
             <div className="flex items-center mb-2 space-x-3">
                 {/* profile picture */}
-                <div className=""><img className="w-[35px] h-[35px] rounded-full object-cover" src={author.pic} alt="" /></div>
+                <div className=""><img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={author.pic} alt="" /></div>
 
                 {/* author name */}
                 <div className="text-lg font-bold">{author.name}</div>
                 {/* Time of post */}
-                <div className=""></div>
+                <div className="">{timeDifference(timeOfPost)}</div>
             </div>
 
             {/* picture */}
-            <div className="flex justify-center"><img className="w-[401px] rounded-sm" src={pic} alt="" /></div>
+            <div className="flex justify-center"><img className="rounded-sm" src={pic} alt="" /></div>
 
             <div className="flex space-x-2 w-full my-3">
                 {/* heart */}
@@ -54,12 +55,13 @@ export default function Post({ author, desc, pic, numLikes = 0, timeOfPost }: Po
                 </button>
 
                 {/* comment */}
-                <button className="cursor-pointer">
+                <button className="cursor-pointer" onClick={() => setIsCommentsOpen(true)}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
                     </svg>
                 </button>
-
+                <CommentsDialog isCommentsOpen={isCommentsOpen} setIsCommentsOpen={setIsCommentsOpen}></CommentsDialog>
+                
                 {/* share */}
                 <button className="cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -69,7 +71,7 @@ export default function Post({ author, desc, pic, numLikes = 0, timeOfPost }: Po
                 </button>
             </div>
             {/* like count */}
-            <div className="mb-1 font-bold">{numLikes} likes</div>
+            <div className="mb-1 font-bold">{likeButtonColor === "white" ? numLikes: numLikes+1} likes</div>
 
             <div className="">{desc}</div>
             <hr className="border-gray-400 h-1 my-3"/>
@@ -77,3 +79,23 @@ export default function Post({ author, desc, pic, numLikes = 0, timeOfPost }: Po
         </div>
     </>
 }
+
+function timeDifference(ms: number) {
+    const now = Date.now();
+    const diff = now - ms; // Difference in milliseconds
+    
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) {
+      return `${days}d`;
+    } else if (hours > 0) {
+      return `${hours}h`;
+    } else if (minutes > 0) {
+      return `${minutes}m`;
+    } else {
+      return `${seconds}s`;
+    }
+  }
