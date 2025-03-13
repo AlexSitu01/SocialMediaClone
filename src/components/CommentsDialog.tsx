@@ -23,8 +23,8 @@ export function CommentsDialog({ isCommentsOpen, setIsCommentsOpen, postInfo }: 
 
                 <DialogPanel className="rounded-sm bg-white shadow-lg flex">
                     {/* Post Picture */}
-                    {/* The aspect ratio of images should be 4:5 but if the image isn't the right aspect, but if the ratio isn't correct, then the image should be cropped */}
-                    <img src={postInfo.pic} alt="" className="w-[40rem] h-[50rem]" />
+                    {/* The aspect ratio of images should be 4:5 but if the image isn't the right aspect, then the image should be cropped */}
+                    <img src={postInfo.pic} alt="" className="w-[33.6rem] h-[42rem]" />
 
                     {/* vertical line */}
                     <div className="border-r-[1px] border-gray-200"></div>
