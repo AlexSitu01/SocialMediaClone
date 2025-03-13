@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Abc, CommentsDialog } from "./CommentsDialog"
+import { CommentsDialog } from "./CommentsDialog"
 
 interface User {
     id: number
@@ -7,8 +7,7 @@ interface User {
     bio: string
     pic: string
 }
-interface Comment {
-    id: number
+export interface Comment {
     content: string
     replys?: Comment[]
 }
@@ -19,19 +18,38 @@ interface PostProps {
     pic: string
     numLikes: number
     timeOfPost: number
-    comments: Comment
+    comments: Comment[]
+}
+export class PostInformation implements PostProps{
+    id: number
+    author: User
+    desc: string
+    pic: string
+    numLikes: number
+    timeOfPost: number
+    comments: Comment[]
+
+    constructor(id: number, author: User, desc: string, pic: string, numLikes = 0, timeOfPost: number, comments: Comment[] = []) {
+        this.id = id;
+        this.author = author;
+        this.desc = desc;
+        this.pic = pic;
+        this.numLikes = numLikes;
+        this.timeOfPost = timeOfPost;
+        this.comments = comments;
+    }
 }
 
 
-export default function Post({ author, desc, pic, numLikes = 0, timeOfPost, comments}: PostProps) {
+export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, comments}: PostProps) {
+    
+    const postInfo = new PostInformation(id, author, desc, pic, numLikes, timeOfPost, comments)
+
     const [likeButtonColor, setLikeButtonColor] = useState("white")
     const [isCommentsOpen, setIsCommentsOpen] = useState(false)
 
-
-
-
     return <>
-        <div className="flex flex-col w-[25rem]">
+        <div className="flex flex-col w-[25rem] w-max[31.25rem]">
            
             <div className="flex items-center mb-2 space-x-3">
                 {/* profile picture */}
@@ -60,7 +78,7 @@ export default function Post({ author, desc, pic, numLikes = 0, timeOfPost, comm
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
                     </svg>
                 </button>
-                <CommentsDialog isCommentsOpen={isCommentsOpen} setIsCommentsOpen={setIsCommentsOpen}></CommentsDialog>
+                <CommentsDialog isCommentsOpen={isCommentsOpen} setIsCommentsOpen={setIsCommentsOpen} postInfo={postInfo}></CommentsDialog>
                 
                 {/* share */}
                 <button className="cursor-pointer">
@@ -71,7 +89,7 @@ export default function Post({ author, desc, pic, numLikes = 0, timeOfPost, comm
                 </button>
             </div>
             {/* like count */}
-            <div className="mb-1 font-bold">{likeButtonColor === "white" ? numLikes: numLikes+1} likes</div>
+            <div className="mb-1 font-bold text-[1rem]">{likeButtonColor === "white" ? numLikes: numLikes+1} likes</div>
 
             <div className="">{desc}</div>
             <hr className="border-gray-400 h-1 my-3"/>
@@ -80,7 +98,7 @@ export default function Post({ author, desc, pic, numLikes = 0, timeOfPost, comm
     </>
 }
 
-function timeDifference(ms: number) {
+export function timeDifference(ms: number) {
     const now = Date.now();
     const diff = now - ms; // Difference in milliseconds
     
@@ -98,4 +116,4 @@ function timeDifference(ms: number) {
     } else {
       return `${seconds}s`;
     }
-  }
+}
