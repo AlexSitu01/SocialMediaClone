@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { CommentsDialog } from "./CommentsDialog"
+import { CommentInfo } from "./Comment"
 
 export class User {
     id: number
@@ -21,8 +22,9 @@ interface PostProps {
     pic: string
     numLikes: number
     timeOfPost: number
-    comments: Comment[]
+    comments: CommentInfo[]
 }
+
 export class PostInfo implements PostProps{
     id: number
     author: User
@@ -30,9 +32,9 @@ export class PostInfo implements PostProps{
     pic: string
     numLikes: number
     timeOfPost: number
-    comments: Comment[]
+    comments: CommentInfo[]
 
-    constructor(id: number, author: User, desc: string, pic: string, numLikes = 0, timeOfPost: number, comments: Comment[] = []) {
+    constructor(id: number, author: User, desc: string, pic: string, numLikes = 0, timeOfPost: number, comments: CommentInfo[] = []) {
         this.id = id;
         this.author = author;
         this.desc = desc;
