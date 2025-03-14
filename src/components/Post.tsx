@@ -1,16 +1,19 @@
 import { useState } from "react"
 import { CommentsDialog } from "./CommentsDialog"
 
-interface User {
+export class User {
     id: number
     name: string
     bio: string
     pic: string
+    constructor(id: number, name: string, bio: string, pic: string){
+        this.id = id
+        this.name = name
+        this.bio = bio
+        this.pic = pic
+    }
 }
-export interface Comment {
-    content: string
-    replys?: Comment[]
-}
+
 interface PostProps {
     id: number
     author: User
@@ -20,7 +23,7 @@ interface PostProps {
     timeOfPost: number
     comments: Comment[]
 }
-export class PostInformation implements PostProps{
+export class PostInfo implements PostProps{
     id: number
     author: User
     desc: string
@@ -43,7 +46,7 @@ export class PostInformation implements PostProps{
 
 export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, comments}: PostProps) {
     
-    const postInfo = new PostInformation(id, author, desc, pic, numLikes, timeOfPost, comments)
+    const postInfo = new PostInfo(id, author, desc, pic, numLikes, timeOfPost, comments)
 
     const [likeButtonColor, setLikeButtonColor] = useState("white")
     const [isCommentsOpen, setIsCommentsOpen] = useState(false)
@@ -78,7 +81,7 @@ export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, c
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z" />
                     </svg>
                 </button>
-                <CommentsDialog isCommentsOpen={isCommentsOpen} setIsCommentsOpen={setIsCommentsOpen} postInfo={postInfo}></CommentsDialog>
+                <CommentsDialog isCommentsOpen={isCommentsOpen} setIsCommentsOpen={setIsCommentsOpen} postInfo={postInfo}></CommentsDialog >
                 
                 {/* share */}
                 <button className="cursor-pointer">
