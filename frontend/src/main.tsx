@@ -1,14 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import "./index.css"
-
-import { Router } from './router.tsx'
-import DVDScreensaver from './components/DVDScreensaver.tsx'
+import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    
-    <Router>
-    </Router>
-  </StrictMode>
+    <App />
+  </StrictMode>,
 )
