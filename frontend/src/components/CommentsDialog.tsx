@@ -18,14 +18,14 @@ export function CommentsDialog({ isCommentsOpen, setIsCommentsOpen, postInfo }: 
     return (
         <Dialog open={isCommentsOpen} as="div" className="relative z-2" onClose={() => setIsCommentsOpen(false)}>
             {/* Background Overlay */}
-            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+            <div className="fixed inset-0 bg-black/30 " aria-hidden="true" />
 
             {/* Centered Dialog */}
             <div className="fixed inset-0 flex items-center justify-center p-4">
 
                 <DialogPanel className="rounded-sm bg-white shadow-lg flex flex-col md:flex-row">
                     {/* Post Picture */}
-                    <div className="relative w-full md:w-[40rem] h-[56.25rem] md:h-[50rem] overflow-hidden">
+                    <div className="relative md:w-[72vh] md:h-[90vh] overflow-hidden">
                         <img
                             src={postInfo.pic}
                             alt=""
@@ -37,7 +37,7 @@ export function CommentsDialog({ isCommentsOpen, setIsCommentsOpen, postInfo }: 
                     <div className="border-t md:border-r-[1px] border-gray-200 md:h-auto h-[1px] md:w-[1px] w-full"></div>
 
                     {/* Right side of Image */}
-                    <div className="flex flex-col w-full md:w-[27.5rem] md:h-[50rem]">
+                    <div className="flex flex-col w-full md:w-[60vh] md:h-[90vh]">
                         {/* Name Card */}
                         <div className="flex items-center mb-2 space-x-3 p-3 border-b border-gray-200">
                             {/* Profile Picture */}
