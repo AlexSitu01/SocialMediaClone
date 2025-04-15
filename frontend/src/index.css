@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@layer base {
+    @font-face {
+      font-family: "Nunito";
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url("/fonts/Nunito-VariableFont_wght.ttf");
+    }
+  
+    @font-face {
+      font-family: "Nunito";
+      font-style: italic;
+      font-weight: 200 900;
+      font-display: swap;
+      src: url("/fonts/Nunito-Italic-VariableFont_wght.ttf");
+    }
+  }
+  
+  @theme {
+    --font-sans: Nunito, sans-serif;
+  }
+:root {
+    color: black;
+    background-color: white;
+}
