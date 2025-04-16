@@ -1,12 +1,15 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { AuthProvider, useAuth } from "../contexts/AuthContext"
 
 export function Register() {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [confirmPassword, setConfirmPassword] = useState<string>("")
-    const [loginError, setLoginError] = useState<"EMPTY_FIELD" | "WRONG_PASS" | "DIFF_PASS" |undefined>()
+    const [loginError, setLoginError] = useState<"EMPTY_FIELD" | "ALR_EXIST" | "DIFF_PASS" |undefined>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const {signUp} = useAuth()
     const navigation = useNavigate()
 
 
@@ -18,13 +21,14 @@ export function Register() {
         else if(password !== confirmPassword){
             setLoginError("DIFF_PASS")
         }
-        // // write wrong password login error here later
-        // else if(){
-            // setLoginError("WRONG_PASS")
-        // }
         else{
-            
-                setIsLoading(true)
+                try{
+                    setIsLoading(true)
+                    await(signUp)
+                }
+                catch (e){
+                    setLoginError("ALR_EXIST")
+                }
             
             navigation("/feed")
         }
@@ -34,8 +38,8 @@ export function Register() {
         if(loginError === "EMPTY_FIELD"){
             return ("Make sure all fields are filled")
         }
-        else if(loginError === "WRONG_PASS"){
-            return ("The Password or Email entered are incorrect")
+        else if(loginError === "ALR_EXIST"){
+            return ("The account alredy exists")
         }
         else if(loginError === "DIFF_PASS"){
             return ("Make sure the passwords match")
