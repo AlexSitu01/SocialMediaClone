@@ -1,16 +1,43 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import DVDScreensaver from "../components/DVDScreensaver"
+import { useAuth } from "../contexts/AuthContext"
+
+
 
 export function Login() {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [loginError, setLoginError] = useState<"EMPTY_FIELD" | "WRONG_PASS" | undefined>()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const navigation = useNavigate()
+    
+    const {login} = useAuth()
 
-    const handleLogin = () => {
-        navigation("/feed")
+    const handleLogin = async() => {
+        if (!password || !email){
+            setLoginError("EMPTY_FIELD");
+        }
+        else{
+            try{
+                setIsLoading(true)
+                await login(email, password);
+                navigation("/feed")
+            }
+            catch(err: any){
+                setLoginError("WRONG_PASS")
+            }
+            finally{
+                setIsLoading(false)
+                
+            }
+        }
     }
+    const handleLoginError = () => {
+        if (loginError === "EMPTY_FIELD"){
+            return ("Make sure all fields are filled")
+        }
+    }
+
 
     return (
         <div>
@@ -28,7 +55,8 @@ export function Login() {
                         </svg>
                         <input type="password" className="outline-0" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
-                    <div className="cursor-pointer text-blue-300">Don't have an account?</div>
+                    <div className="text-red-600 font">{handleLoginError()}</div>
+                    <button onClick={() => navigation("/register")} className="cursor-pointer text-blue-300">Don't have an account?</button>
                     <button className="cursor-pointer rounded-xl p-2 font-semibold bg-blue-500 text-white" onClick={handleLogin}>Login</button>
                 </div>
             </div>
