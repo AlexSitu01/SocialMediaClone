@@ -36,6 +36,10 @@ export function Login() {
         if (loginError === "EMPTY_FIELD"){
             return ("Make sure all fields are filled")
         }
+        else if(loginError === "WRONG_PASS"){
+            return("The Email or Password was wrong")
+        }
+        return
     }
 
 
