@@ -3,7 +3,7 @@ import Post from "../components/Post";
 
 export function Feed() {
     return (
-        <div>
+        <div className="p-4">
             {/* sticky navigation bar */}
             <div className="fixed z-10">
                 <Navbar></Navbar>

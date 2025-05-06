@@ -11,7 +11,7 @@ export function Register() {
     const [loginError, setLoginError] = useState<"EMPTY_FIELD" | "ALR_EXIST" | "DIFF_PASS" | undefined>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const { signUp } = useAuth()
+    const { signUp} = useAuth()
     const navigation = useNavigate()
 
 
