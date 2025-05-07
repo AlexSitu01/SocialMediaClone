@@ -1,18 +1,18 @@
-import { addDoc, collection } from "firebase/firestore";
-import { useEffect } from "react";
-import { db } from "./firebase"
+import {  doc, getFirestore, setDoc } from "firebase/firestore";
+import {db} from "./firebase"
+import { User } from "firebase/auth";
 
 
-export async function addUser(email: string, UID: string) {
+
+export const addUser = async (user: User) => {
     try {
-        const docRef = await addDoc(collection(db, "users"),
-            {
-                email: email,
-                UID: UID,
-                createdAt: new Date()
-            })
-    }
-    catch (e){
-        console.log("Error adding document: ", e)
-    }
-}
+        await setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            email: user.email,
+            createdAt: new Date()
+        });
+        console.log("User added to Firestore");
+      } catch (error) {
+        console.error("Error adding user to Firestore:", error);
+      }
+};
