@@ -10,34 +10,34 @@ export function Login() {
     const [loginError, setLoginError] = useState<"EMPTY_FIELD" | "WRONG_PASS" | undefined>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const navigation = useNavigate()
-    
-    const {login} = useAuth()
 
-    const handleLogin = async() => {
-        if (!password || !email){
+    const { login } = useAuth()
+
+    const handleLogin = async () => {
+        if (!password || !email) {
             setLoginError("EMPTY_FIELD");
         }
-        else{
-            try{
+        else {
+            try {
                 setIsLoading(true)
                 await login(email, password);
                 navigation("/feed")
             }
-            catch(err: any){
+            catch (err: any) {
                 setLoginError("WRONG_PASS")
             }
-            finally{
+            finally {
                 setIsLoading(false)
-                
+
             }
         }
     }
     const handleLoginError = () => {
-        if (loginError === "EMPTY_FIELD"){
+        if (loginError === "EMPTY_FIELD") {
             return ("Make sure all fields are filled")
         }
-        else if(loginError === "WRONG_PASS"){
-            return("The Email or Password was wrong")
+        else if (loginError === "WRONG_PASS") {
+            return ("The Email or Password was wrong")
         }
         return
     }
@@ -61,7 +61,12 @@ export function Login() {
                     </div>
                     <div className="text-red-600 font">{handleLoginError()}</div>
                     <button onClick={() => navigation("/register")} className="cursor-pointer text-blue-300">Don't have an account?</button>
-                    <button className="cursor-pointer rounded-xl p-2 font-semibold bg-blue-500 text-white" onClick={handleLogin}>Login</button>
+                    <button className="cursor-pointer rounded-xl p-2 font-semibold bg-blue-500 text-white" onClick={handleLogin}>{isLoading ?
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                    : "Login"
+                   }</button>
                 </div>
             </div>
         </div>

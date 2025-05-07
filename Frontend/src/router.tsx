@@ -8,7 +8,7 @@ import { requireAuth, redirectIfLoggedIn } from "./lib/firebase/authHelpers";
 
 const router = createBrowserRouter([
     {
-        path: "/", element:<Feed></Feed>
+        path: "/", element:<Feed></Feed>, loader: requireAuth
     },
     {
         path: "/login", element:<Login></Login>, loader: redirectIfLoggedIn
