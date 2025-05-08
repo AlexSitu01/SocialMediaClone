@@ -1,7 +1,7 @@
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { redirect } from "react-router-dom";
 
-function waitForFirebaseAuth(): Promise<User | null> {
+export function waitForFirebaseAuth(): Promise<User | null> {
   return new Promise((resolve) => {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
       unsubscribe(); // cleanup listener
