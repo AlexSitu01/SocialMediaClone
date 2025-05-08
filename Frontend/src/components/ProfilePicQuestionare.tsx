@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { CarouselProps } from "./ProfileSetupCarousel";
+import imageCompression from 'browser-image-compression';
 
 interface ProfilePicProps extends CarouselProps {
     fileName: string
@@ -9,18 +10,32 @@ interface ProfilePicProps extends CarouselProps {
 }
 export function ProfilePicQuestionare({ handleNext, handlePrev, setImageFile, imageFile, fileName, setFileName }: ProfilePicProps) {
 
-    const handleImageInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setFileName(file.name); // 
-            const reader = new FileReader();
+            try {
+                // Compression options
+                const options = {
+                    maxSizeMB: 10, // max size in MB
+                    maxWidthOrHeight: 300, // limit the width or height
+                    useWebWorker: true,
+                };
 
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                setImageFile(base64String);
-                console.log("Base64 string:", base64String);
-            };
-            reader.readAsDataURL(file);
+                // Compress the image
+                const compressedFile: Blob = await imageCompression(file, options);
+
+                // Convert to base64
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const base64String = reader.result as string;
+                    setImageFile(base64String);
+                    console.log("Compressed Base64 string:", base64String);
+                };
+                reader.readAsDataURL(compressedFile);
+            } catch (error) {
+                console.error("Error while compressing the image:", error);
+            }
         }
     };
 
@@ -61,3 +76,4 @@ export function ProfilePicQuestionare({ handleNext, handlePrev, setImageFile, im
         </div>
     )
 }
+

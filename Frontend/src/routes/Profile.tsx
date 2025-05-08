@@ -1,5 +1,5 @@
 export function Profile(){
     return(
-        <div></div>
+        <div className="text-black">Test</div>
     )
 }

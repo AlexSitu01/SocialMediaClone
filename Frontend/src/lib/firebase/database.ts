@@ -1,9 +1,9 @@
 import {  doc, getFirestore, setDoc } from "firebase/firestore";
 import {db} from "./firebase"
 import { getAuth, User } from "firebase/auth";
+import { waitForFirebaseAuth } from "./authHelpers";
 
-const auth = getAuth()
-const user = auth.currentUser
+
 
 export const addUser = async (user: User) => {
     try {
@@ -19,6 +19,7 @@ export const addUser = async (user: User) => {
 };
 export async function addProfileSetup(userName: string, pfp: string, bio:string){
     try{
+        const user = await waitForFirebaseAuth()
         if(user){
             const data = {
                 userName: userName,
