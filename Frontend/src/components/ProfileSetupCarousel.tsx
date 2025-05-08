@@ -3,6 +3,7 @@ import { UsernameQuestionare } from "./UsernameQuestionare";
 import { ProfilePicQuestionare } from "./ProfilePicQuestionare";
 import { BioQuestionare } from "./BioQuestionare";
 import { useNavigate } from "react-router-dom";
+import { addProfileSetup } from "../lib/firebase/database";
 
 export interface CarouselProps {
     handleNext: () => void,
@@ -22,9 +23,9 @@ export function ProfileSetupCarasel() {
     const [fileName, setFileName] = useState<string>("")
     const navigation = useNavigate()
 
-    const handleSubmit = () => {
+    const handleSubmit = async() => {
         // send data to database
-        
+        await addProfileSetup(userName, imageFile, bio)
         // navigate to profile page
         navigation("/profile")
     }
