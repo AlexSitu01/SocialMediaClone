@@ -2,7 +2,7 @@ import { collection, doc, setDoc, where, query, getDoc, getDocs } from "firebase
 import { db } from "./firebase"
 import { getAuth } from "firebase/auth";
 import { waitForFirebaseAuth } from "./authHelpers";
-import { User } from "../../components/Post";
+import { User as myUser } from "../../components/Post";
 
 
 
@@ -41,14 +41,14 @@ export async function addProfileSetup(userName: string, pfp: string, bio: string
   }
 }
 
-export async function getUserInfo(): Promise<User | undefined> {
+export async function getUserInfo(): Promise<myUser| undefined> {
   const user = await waitForFirebaseAuth()
   if (user) {
     const userDocRef = doc(db, "users", user.uid);
     const userDoc = await getDoc(userDocRef);
 
     if (userDoc.exists()) {
-      return userDoc.data() as User;
+      return userDoc.data() as myUser;
     }
   }
 }
