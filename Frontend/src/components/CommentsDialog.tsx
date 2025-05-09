@@ -42,11 +42,11 @@ export function CommentsDialog({ isCommentsOpen, setIsCommentsOpen, postInfo }: 
                         <div className="flex items-center mb-2 space-x-3 p-3 border-b border-gray-200">
                             {/* Profile Picture */}
                             <div>
-                                <img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={postInfo.author.pic} alt="" />
+                                <img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={postInfo.author.pfp} alt="" />
                             </div>
 
                             {/* Author Name */}
-                            <div className="text-lg font-bold">{postInfo.author.name}</div>
+                            <div className="text-lg font-bold">{postInfo.author.userName}</div>
                             <div>•</div>
                             <div className="text-blue-400 cursor-pointer">Follow</div>
                         </div>

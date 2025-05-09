@@ -3,15 +3,19 @@ import { CommentsDialog } from "./CommentsDialog"
 import { CommentInfo } from "./Comment"
 
 export class User {
-    id: number
-    name: string
+    uid: string
+    userName: string
     bio: string
-    pic: string
-    constructor(id: number, name: string, bio: string, pic: string){
-        this.id = id
-        this.name = name
+    pfp: string
+    email: string
+    createdAt: Date
+    constructor(uid: string, userName: string, bio: string, pfp: string, email: string, createdAt: Date){
+        this.uid = uid
+        this.userName= userName
         this.bio = bio
-        this.pic = pic
+        this.pfp = pfp
+        this.email = email
+        this.createdAt = createdAt
     }
 }
 
@@ -58,10 +62,10 @@ export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, c
            
             <div className="flex items-center mb-2 space-x-3">
                 {/* profile picture */}
-                <div className=""><img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={author.pic} alt="" /></div>
+                <div className=""><img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={author.pfp} alt="" /></div>
 
                 {/* author name */}
-                <div className="text-lg font-bold">{author.name}</div>
+                <div className="text-lg font-bold">{author.userName}</div>
                 {/* Time of post */}
                 <div className="">{timeDifference(timeOfPost)}</div>
             </div>
