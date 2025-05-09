@@ -30,7 +30,6 @@ export function ProfilePicQuestionare({ handleNext, handlePrev, setImageFile, im
                 reader.onloadend = () => {
                     const base64String = reader.result as string;
                     setImageFile(base64String);
-                    console.log("Compressed Base64 string:", base64String);
                 };
                 reader.readAsDataURL(compressedFile);
             } catch (error) {

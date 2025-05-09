@@ -16,6 +16,7 @@ export function ProfileSetupCarasel() {
 
     const COMPS = ["USERNAME", "PROFILE_PIC", "BIO"];
     const [usernameError, setUsernameError] = useState<"EMPTY" | "INAPPROPRIATE" | undefined>()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [currentComp, setCurrentComp] = useState<number>(0);
     const [userName, setUserName] = useState<string>("")
     const [bio, setBio] = useState<string>("")
@@ -25,8 +26,10 @@ export function ProfileSetupCarasel() {
 
     const handleSubmit = async() => {
         // send data to database
+        setIsLoading(true)
         await addProfileSetup(userName, imageFile, bio)
         // navigate to profile page
+        setIsLoading(false)
         navigation("/profile")
     }
 
@@ -65,7 +68,7 @@ export function ProfileSetupCarasel() {
             case "PROFILE_PIC":
                 return <ProfilePicQuestionare setFileName={setFileName} fileName={fileName} imageFile={imageFile} setImageFile={setImageFile} handleNext={handleNext} handlePrev={handlePrev}></ProfilePicQuestionare>;
             case "BIO":
-                return <BioQuestionare bio={bio} setBio={setBio} handleNext={handleNext} handlePrev={handlePrev}></BioQuestionare>;
+                return <BioQuestionare isLoading={isLoading} bio={bio} setBio={setBio} handleNext={handleNext} handlePrev={handlePrev}></BioQuestionare>;
             default:
                 return null; // or a fallback component
         }
