@@ -1,5 +1,9 @@
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { redirect } from "react-router-dom";
+import { db } from "./firebase";
+import { User as myUser} from "../../components/Post";
+
 
 export function waitForFirebaseAuth(): Promise<User | null> {
   return new Promise((resolve) => {
@@ -16,8 +20,7 @@ export async function requireAuth() {
   if (!user) {
     throw redirect("/login");
   }
-
-  return user;
+  
 }
 
 export async function redirectIfLoggedIn() {
@@ -28,4 +31,27 @@ export async function redirectIfLoggedIn() {
   }
 
   return null;
+}
+
+// redirects user to setup page if thier account hasn't been setup yet
+// also checks if the user is authenticated
+export async function redirectIfNeedSetup(){
+  const user = await waitForFirebaseAuth();
+
+  if (!user) {
+    throw redirect("/login");
+  }
+  
+  if (user) {
+    const userDocRef = doc(db, "users", user.uid)
+    const userDoc = await getDoc(userDocRef)
+
+    if (userDoc.exists()) {
+      const userInfo = userDoc.data() as myUser
+      if(!userInfo.userName){
+        throw redirect("/setup")
+      }
+    }
+  }
+  return null
 }

@@ -4,10 +4,9 @@ import Post from "../components/Post";
 export function Feed() {
     return (
         <div className="p-4">
-            {/* sticky navigation bar */}
-            <div className="fixed z-10">
-                <Navbar></Navbar>
-            </div>
+
+            <Navbar></Navbar>
+            
 
             <div className="flex flex-col size-full items-center my-4'">
                 <Post id={1} author={{ uid: "fdsa", userName: "Jason Ly", bio: "Pog Champ", pfp: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsRWrZP4YmuQ21VFfuNc5ch85RNRwBf7qL_A&s' }} pic='https://media.officedepot.com/images/f_auto,q_auto,e_sharpen,h_450/products/208206/208206_p/208206' desc='LOOK COKE ^^^^^^^^^^^^' numLikes={10} timeOfPost={1741817303814} comments={[{ content: "Testing" }]} />
