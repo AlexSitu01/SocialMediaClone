@@ -12,8 +12,6 @@ export interface CommentInfo {
     isDescription?: boolean
 }
 
-
-
 export default function Comment({ id, author, content, timeOfComment, likeCount, replys, isDescription = false}: CommentInfo) {
 
     const [likeButtonColor, setLikeButtonColor] = useState("white")
@@ -21,11 +19,11 @@ export default function Comment({ id, author, content, timeOfComment, likeCount,
     return <>
         <div className="flex mb-4">
             <div className="w-[25%]">
-                <img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={author.pic} alt="" />
+                <img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={author.pfp} alt="" />
             </div>
             <div className="w-auto">
 
-                <div>{author.name}</div>
+                <div>{author.userName}</div>
 
                 <div>{content}</div>
 
