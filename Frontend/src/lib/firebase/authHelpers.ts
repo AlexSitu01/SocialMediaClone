@@ -3,6 +3,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { redirect } from "react-router-dom";
 import { db } from "./firebase";
 import { User as myUser} from "../../components/Post";
+import { addUser } from "./database";
 
 
 export function waitForFirebaseAuth(): Promise<User | null> {
@@ -51,6 +52,12 @@ export async function redirectIfNeedSetup(){
       if(!userInfo.userName){
         throw redirect("/setup")
       }
+    }
+    // first time logging in with google
+    else{
+      // add user file to db
+      addUser()
+      throw redirect("/setup")
     }
   }
   return null
