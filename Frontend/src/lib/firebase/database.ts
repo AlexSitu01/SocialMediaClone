@@ -21,6 +21,7 @@ export const addUser = async () => {
     console.error("Error adding user to Firestore:", error);
   }
 };
+
 export async function addProfileSetup(userName: string, pfp: string, bio: string) {
   try {
     const user = await waitForFirebaseAuth()

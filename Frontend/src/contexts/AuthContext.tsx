@@ -1,7 +1,8 @@
 import { createContext, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential, signInWithPopup } from "firebase/auth";
 import { onAuthStateChanged, User } from "firebase/auth";
 import "../lib/firebase/firebase"
+import { GoogleAuthProvider } from "firebase/auth";
 
 
 const auth = getAuth();
@@ -11,6 +12,7 @@ export interface AuthContextType {
     logout: () => Promise<void>;
     login: (email: string, password: string) => Promise<UserCredential>;
     signUp: (email: string, password: string) => Promise<UserCredential>;
+    loginWithGoogle: () => Promise<UserCredential>;
     userLoggedIn: boolean;
     loading: boolean;
   }
@@ -41,7 +43,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     function signUp(email: string, password: string) {
         return createUserWithEmailAndPassword(auth, email, password)
     }
-
+    function loginWithGoogle(){
+        return signInWithPopup(auth, new GoogleAuthProvider())
+    }
     function logout() {
         return signOut(auth)
     }
@@ -60,7 +64,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         loading,
         logout,
         login,
-        signUp
+        signUp,
+        loginWithGoogle
     }
 
     return (
