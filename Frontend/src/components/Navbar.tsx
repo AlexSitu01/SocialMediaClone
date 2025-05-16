@@ -3,23 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getUserInfo } from "../lib/firebase/database";
 import { User } from "./Post";
+import { useUser } from "../contexts/UserContext";
 
 export function Navbar() {
 
     const [currentSelection, setCurrentUser] = useState<"HOME" | "SEARCH" | "EXPLORE" | "MESSAGES" | "NOTIFICATIONS" | "CREATE" | "PROFILE" | "MORE" | "LOGOUT" | undefined>()
-    const [userData, setUserData] = useState<User| null>(null);
     const navigator = useNavigate()
     const {logout} = useAuth()
-    useEffect(()=>{
-        async function fetchUser() {
-            const data = await getUserInfo();
-            if(data){
-                setUserData(data);
-            }
-          }
-      
-          fetchUser();
-    },[])
+    const { userData} = useUser()
+
 
     return (
         <div className="flex flex-col space-y-5 text-xl fixed z-10">

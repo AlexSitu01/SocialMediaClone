@@ -2,19 +2,13 @@ import { useEffect, useState, cache } from "react";
 import { Navbar } from "../components/Navbar";
 import { User as myUser } from "../components/Post";
 import { getUserInfo } from "../lib/firebase/database";
+import { useLocation } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 
 export function Profile() {
-    const [userData, setUserData] = useState<myUser | undefined>()
-    useEffect(() => {
-        async function fetchUser() {
-            const data = await getUserInfo()
-            if (data) {
-                setUserData(data)
-            }
-        }
-        fetchUser()
-    }, [])
+    const {userData} = useUser()
+
     return (
         <div className="p-4">
             <Navbar></Navbar>
