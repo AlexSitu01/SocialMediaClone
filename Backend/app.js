@@ -48,6 +48,10 @@ async function getUser(uid) {
   return doc.data();
 }
 
+async function createPost(){
+  const imageRef = ref(storage, "posts")
+}
+
 app.use(express.json({ limit: '10mb' }))
 app.use(cors());
 app.use(middleware.decodeToken)
@@ -97,6 +101,13 @@ app.post("/api/addProfile", async (req, res)=>{
     return res.status(300).json({message: "Didn't receive user"})
   }
 
+})
+
+app.post("/api/createPost", async(req, res) =>{
+  const uid = req.user?.uid
+  if(req.body.imageFile && req.body.desc){
+    // add image to storage
+  }
 })
 
 app.listen(port, () => {
