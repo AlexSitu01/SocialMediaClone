@@ -7,6 +7,7 @@ import {getAuth} from "firebase/auth"
 import { requireAuth, redirectIfLoggedIn, redirectIfNeedSetup } from "./lib/firebase/authHelpers";
 import { ProfileSetUp } from "./routes/ProfileSetUp";
 import { Profile } from "./routes/Profile";
+import { Create } from "./routes/Create";
 
 const router = createBrowserRouter([
     {
@@ -27,7 +28,10 @@ const router = createBrowserRouter([
     },
     {
         path: "/profile", element: <Profile></Profile>, loader: redirectIfNeedSetup
-    }
+    },
+    { 
+        path: "/create", element: <Create></Create>, loader: redirectIfNeedSetup 
+    },
 
 ]);
 

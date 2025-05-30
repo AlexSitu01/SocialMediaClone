@@ -16,7 +16,7 @@ export function Feed() {
                 <Post id={2} author={{ uid: "fewrf", userName: "Alex Situ", bio: "Real Life Human", pfp: "https://beverages2u.com/wp-content/uploads/2019/05/0007800000038_C.jpg" }} pic="https://i.pinimg.com/736x/df/ed/7f/dfed7f105f7817381f3e6e1b898b43de.jpg" desc='Look its a brand new can of Sprite how cool is that ' numLikes={3} timeOfPost={1741817347758} comments={[{ content: "Testing" }]} />
             </div>
 
-            <button className="bg-blue-300 text-white cursor-pointer" onClick={getUserInfo}>Print User Info</button>
+           
         </div>
     )
 

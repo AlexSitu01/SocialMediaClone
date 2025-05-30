@@ -83,10 +83,22 @@ export async function addProfileSetup(userName: string, pfp: string, bio: string
 
 export async function getUserInfo(): Promise<myUser| undefined>{
   const user = await waitForFirebaseAuth();
-  let token = await user?.getIdToken()
+  const token = await user?.getIdToken()
   console.log(token)
   if(user){
-    let result = await axios.get("http://localhost:3000/api/getUser", {headers: {Authorization: 'Bearer '+ token}});
+    const result = await axios.get("http://localhost:3000/api/getUser", {headers: {Authorization: 'Bearer '+ token}});
     return result.data as myUser
+  }
+}
+
+export async function createPost(imageFile: string, desc: string){
+  const user = await waitForFirebaseAuth()
+  const token = await user?.getIdToken()
+  const data = {
+    imageFile: imageFile,
+    desc: desc
+  }
+  if (user){
+    const result = await axios.post("http://localhost:3000/api/getUser", data, {headers:{Authorization: 'Bearer '+ token}})
   }
 }
