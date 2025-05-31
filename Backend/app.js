@@ -1,20 +1,13 @@
 const express = require('express')
 const cors = require("cors");
 const middleware = require('./middleware');
+const multer  = require('multer')
 const app = express()
 const port = 3000
 const admin = require("./config/firebase-config")
+const bucket = admin.storage().bucket()
+const upload = multer()
 
-class User {
-  constructor(email, uid, createdAt, pfp = "", userName = "", bio = "") {
-    this.email = email
-    this.uid = uid
-    this.createdAt = createdAt
-    this.pfp = pfp
-    this.userName = userName
-    this.bio = bio
-  }
-}
 
 async function addUser(uid, email) {
   const db = admin.firestore(); // get Firestore instance
@@ -48,8 +41,32 @@ async function getUser(uid) {
   return doc.data();
 }
 
-async function createPost(){
-  const imageRef = ref(storage, "posts")
+async function postImage(buffer, folder, filename){
+const filePath = `${folder}/${filename}`;
+  const file = bucket.file(filePath);
+
+  await file.save(buffer, {
+    metadata:  "image/jpeg",
+    resumable: false,
+  });
+
+  const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
+  return publicUrl;
+   
+}
+async function createPost(imageBuffer, desc, uid){
+  const db = admin.firestore();
+  const postsRef = db.collection("posts").doc();
+
+ await postsRef.set({
+    postID: postsRef.id, // still store it in the document
+    authorID: uid,
+    desc,
+    createdAt: new Date(),
+  }), {merge: true};
+  
+  postImage(imageBuffer, "posts", postsRef.id)
+  console.log(`Post ${postsRef.id} created successfully.`);
 }
 
 app.use(express.json({ limit: '10mb' }))
@@ -103,11 +120,15 @@ app.post("/api/addProfile", async (req, res)=>{
 
 })
 
-app.post("/api/createPost", async(req, res) =>{
+app.post("/api/createPost", upload.single("image"), async(req, res) =>{
   const uid = req.user?.uid
-  if(req.body.imageFile && req.body.desc){
-    // add image to storage
+  const imageBuffer = req.file?.buffer; // <-- Your image Blob
+  const desc = req.body.desc;
+  if(imageBuffer && desc && uid){
+    console.log("Creating new posts...")
+    createPost(imageBuffer, desc, uid);
   }
+  return res.status(200).json({message: "Post was successfully made."})
 })
 
 app.listen(port, () => {
