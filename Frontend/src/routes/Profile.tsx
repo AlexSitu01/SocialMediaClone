@@ -1,8 +1,4 @@
-import { useEffect, useState, cache } from "react";
 import { Navbar } from "../components/Navbar";
-import { User as myUser } from "../components/Post";
-import { getUserInfo } from "../lib/firebase/database";
-import { useLocation } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 
 
@@ -42,7 +38,7 @@ export function Profile() {
                         <div>
                             <div className="font-bold">{userData?.userName}</div>
                             <div className="text-gray-500">Title/Occupation</div>
-                            <div className="w-80">Description Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat qui saepe, error nemo aspernatur totam quae nisi cum mollitia quibusdam explicabo tempore, quis, ipsam molestiae ad magni iste vitae est?</div>
+                            <div className="w-80">{userData?.bio}</div>
                             <div className="pt-5 text-xs">Followed By </div>
                         </div>
                     </div>

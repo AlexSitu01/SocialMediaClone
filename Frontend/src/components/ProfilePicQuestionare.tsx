@@ -18,7 +18,6 @@ export function ProfilePicQuestionare({ handleNext, handlePrev, setImageFile, im
                 // Compression options
                 const options = {
                     maxSizeMB: 10, // max size in MB
-                    maxWidthOrHeight: 300, // limit the width or height
                     useWebWorker: true,
                 };
 

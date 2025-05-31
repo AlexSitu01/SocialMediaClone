@@ -1,10 +1,5 @@
-import { collection, doc, setDoc, where, query, getDoc, getDocs } from "firebase/firestore";
-import { db } from "./firebase"
-import { getAuth, User } from "firebase/auth";
 import { waitForFirebaseAuth } from "./authHelpers";
 import { User as myUser } from "../../components/Post";
-import { useEffect } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import axios from "axios";
 
 
@@ -91,14 +86,15 @@ export async function getUserInfo(): Promise<myUser| undefined>{
   }
 }
 
-export async function createPost(imageFile: string, desc: string){
+export async function createPost(imageFile: Blob, desc: string){
   const user = await waitForFirebaseAuth()
   const token = await user?.getIdToken()
-  const data = {
-    imageFile: imageFile,
-    desc: desc
-  }
+  const formData = new FormData();
+  formData.append('image', imageFile)
+  formData.append('desc', desc)
+
   if (user){
-    const result = await axios.post("http://localhost:3000/api/getUser", data, {headers:{Authorization: 'Bearer '+ token}})
+     await axios.post("http://localhost:3000/api/createPost", formData, {headers:{Authorization: 'Bearer '+ token}})
   }
+
 }

@@ -1,10 +1,11 @@
-import imageCompression from "browser-image-compression";
 import { Navbar } from "../components/Navbar";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createPost } from "../lib/firebase/database";
 
 export function Create() {
-    const [imageFile, setImageFile] = useState<string>("");
+    const [imageFile, setImageFile] = useState<Blob| undefined>();
+    const [imageFileString, setImageFileString] = useState<string>("")
     const [description, setDescription] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigation = useNavigate();
@@ -18,16 +19,10 @@ export function Create() {
         setIsLoading(true);
 
         try {
-            // Simulated post submission (replace with your actual API/database logic)
-            const postData = {
-                image: imageFile,
-                description,
-            };
+            // sends post request to backend
+            console.log("Trying")
+            await createPost(imageFile, description);
 
-            console.log("Submitting post data:", postData);
-
-            // Simulate a delay
-            await new Promise((resolve) => setTimeout(resolve, 1000));
 
             // Navigate after submission
             navigation("/profile");
@@ -42,19 +37,14 @@ export function Create() {
     const handleImageInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            try {
-                const options = {
-                    maxSizeMB: 10,
-                    maxWidthOrHeight: 300,
-                    useWebWorker: true,
-                };
-                const compressedFile: Blob = await imageCompression(file, options);
-                const reader = new FileReader();
+            try {   
+            const reader = new FileReader();
                 reader.onloadend = () => {
                     const base64String = reader.result as string;
-                    setImageFile(base64String);
-                };
-                reader.readAsDataURL(compressedFile);
+                    setImageFileString(base64String);
+                }
+                reader.readAsDataURL(file)
+                setImageFile(file);
             } catch (error) {
                 console.error("Error while compressing the image:", error);
             }
@@ -69,7 +59,7 @@ export function Create() {
                     <div className="text-lg font-semibold">Create a Post</div>
 
                     {imageFile && (
-                        <img className="w-[320px] h-[320px] object-cover" src={imageFile} alt="Uploaded preview" />
+                        <img className="w-[320px] h-[320px] object-cover" src={imageFileString} alt="Uploaded preview" />
                     )}
 
                     <input
