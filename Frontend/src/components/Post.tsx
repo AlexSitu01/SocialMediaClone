@@ -71,7 +71,7 @@ export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, c
             </div>
 
             {/* picture */}
-            <div className="flex justify-center"><img className="rounded-sm" src={pic} alt="" /></div>
+            <div className="flex justify-center"><img className="rounded-sm" src={pic} alt="There was a problem displaying the image" /></div>
 
             <div className="flex space-x-2 w-full my-3">
                 {/* heart */}

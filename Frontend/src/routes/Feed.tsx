@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import Post, { PostInfo, User } from "../components/Post";
 import { waitForFirebaseAuth } from "../lib/firebase/authHelpers";
@@ -9,7 +9,7 @@ import { db, storage } from "../lib/firebase/firebase";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 
 export function Feed() {
-    const [loading, setLoading] = useState<boolean>()
+    const [loading, setLoading] = useState<boolean>(false)
     const [posts, setPost] = useState<PostInfo[]>([])
     const [error, setError] = useState<"Error" | undefined>()
     const [lastPost, setLastPost] = useState<QueryDocumentSnapshot>()
@@ -45,23 +45,12 @@ export function Feed() {
                 if (!userSnap.exists()) {
                     continue
                 }
-
                 const userData = userSnap.data() as User
-
-                // Fetch image URL from Firebase Storage
-                const imageRef = ref(storage, `posts/${postData.postID}`); // assuming .jpg or .png depending on upload
-                let imageUrl = "";
-                try {
-                    imageUrl = await getDownloadURL(imageRef);
-                } catch (error) {
-                    console.warn(`Image not found for post ${postData.postID}`, error);
-                    imageUrl = ""; // fallback or broken image
-                }
 
 
                 const post: PostInfo = {
                     id: postData.postID,
-                    pic: imageUrl,
+                    pic: postData.pic,
                     desc: postData.desc,
                     numLikes: postData.numLikes,
                     timeOfPost: postData.createdAt,
@@ -70,6 +59,7 @@ export function Feed() {
                 };
 
                 newPosts.push(post);
+                console.log("Post: " + post.desc)
 
             }
 
@@ -92,6 +82,9 @@ export function Feed() {
         }
 
     }
+    fetchData()
+    // get first group of data
+ 
     useEffect(() => {
         const handleScroll = () => {
             if (
@@ -102,7 +95,10 @@ export function Feed() {
             }
         }
         window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        }
     }, [loading, lastPost, hasMore]);
 
     return (
@@ -113,8 +109,8 @@ export function Feed() {
             <div className="flex flex-col size-full items-center my-4'">
                 {posts.map((post, index) => (
                     <Post
-                        key={post.id || index}
-                        id={post.id || index}
+                        key={post.id}
+                        id={post.id}
                         author={post.author}
                         pic={post.pic}
                         desc={post.desc}
