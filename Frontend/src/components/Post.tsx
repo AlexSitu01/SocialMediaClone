@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CommentsDialog } from "./CommentsDialog"
 import { CommentInfo } from "./Comment"
 import { addLike } from "../lib/firebase/database"
@@ -28,6 +28,7 @@ interface PostProps {
     numLikes?: number
     timeOfPost: number
     comments: CommentInfo[]
+    liked: boolean
 }
 
 export class PostInfo implements PostProps {
@@ -38,8 +39,9 @@ export class PostInfo implements PostProps {
     numLikes?: number
     timeOfPost: number
     comments: CommentInfo[]
+    liked: boolean
 
-    constructor(id: string, author: User, desc: string, pic: string, numLikes = 0, timeOfPost: number, comments: CommentInfo[] = []) {
+    constructor(id: string, author: User, desc: string, pic: string, numLikes = 0, timeOfPost: number, comments: CommentInfo[] = [], liked: boolean) {
         this.id = id;
         this.author = author;
         this.desc = desc;
@@ -47,21 +49,28 @@ export class PostInfo implements PostProps {
         this.numLikes = numLikes;
         this.timeOfPost = timeOfPost;
         this.comments = comments;
+        this.liked = liked
     }
 }
 
 
-export default function Post({ id, author, desc, pic, numLikes = 0, timeOfPost, comments }: PostProps) {
+export default function Post({ id, author, desc, pic, numLikes = 0, timeOfPost, comments, liked }: PostProps) {
 
-    const postInfo = new PostInfo(id, author, desc, pic, numLikes, timeOfPost, comments)
+    const postInfo = new PostInfo(id, author, desc, pic, numLikes, timeOfPost, comments, liked)
 
-    const [likeButtonColor, setLikeButtonColor] = useState("white")
-    const [isCommentsOpen, setIsCommentsOpen] = useState(false)
+    const [likeButtonColor, setLikeButtonColor] = useState<"white" | "red">("white")
+    const [isCommentsOpen, setIsCommentsOpen] = useState<boolean>(false)
+
+    useEffect(() => {
+        setLikeButtonColor(liked ? "red" : "white");
+        console.log("Is it liked?" + liked)
+    }, [liked]);
+
 
     function handleLike() {
         setLikeButtonColor(likeButtonColor === "white" ? "red" : "white");
         console.log(id)
-        if (id){
+        if (id) {
             addLike(id);
         }
     }

@@ -36,8 +36,7 @@ export function Feed() {
             for (const docSnap of snap.docs) {
                 const postData = docSnap.data()
                 const userRef = doc(db, "users", postData.authorID)
-
-
+                
                 const userSnap = await getDoc(userRef)
 
 
@@ -45,17 +44,20 @@ export function Feed() {
                 if (!userSnap.exists()) {
                     continue
                 }
-                const userData = userSnap.data() as User
 
+                const userData = userSnap.data() as User
+                const {count, liked} = await getLikeCount(postData.postID) ?? { count: 0, liked: false };
+                
 
                 const post: PostInfo = {
                     id: postData.postID,
                     pic: postData.pic,
                     desc: postData.desc,
-                    numLikes: 0,
+                    numLikes: count,
                     timeOfPost: postData.createdAt,
                     comments: postData.comments || [],
                     author: userData,
+                    liked: liked
                 };
 
                 newPosts.push(post);

@@ -151,7 +151,7 @@ app.post("/api/addLike", async (req, res) => {
       return res.status(400).json({ message: "postID is required" });
     }
     const db = admin.firestore()
-    const likesRef = db.collection("likes").doc(uid);
+    const likesRef = db.collection("likes").doc();
     await likesRef.set({
       userID: uid,
       postID: postID,
@@ -167,6 +167,7 @@ app.post("/api/addLike", async (req, res) => {
 
 app.get("/api/getLikeCount", async (req, res) => {
   try {
+    const uid = req.user?.uid
     const postID = req.query.postID; // Use query param for GET request
     if (!postID) {
       return res.status(400).json({ error: "postID is required" });
@@ -178,8 +179,16 @@ app.get("/api/getLikeCount", async (req, res) => {
       .where("postID", "==", postID)
       .get();
 
+    let liked = false;
+
+    snapshot.forEach(doc =>{
+      if(doc.data.userID === uid){
+        liked = true
+      }
+    })
+
     const likeCount = snapshot.size; // Count of documents
-    return res.status(200).json({ count: likeCount });
+    return res.status(200).json({ count: likeCount, liked: liked });
   } catch (error) {
     console.error("Error getting like count:", error);
     return res.status(500).json({ error: "Internal server error" });
