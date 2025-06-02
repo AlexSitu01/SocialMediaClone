@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { CommentsDialog } from "./CommentsDialog"
 import { CommentInfo } from "./Comment"
+import { addLike } from "../lib/firebase/database"
 
 export class User {
     uid: string
@@ -9,9 +10,9 @@ export class User {
     pfp: string
     email: string
     createdAt: Date
-    constructor(uid: string, userName: string, bio: string, pfp: string, email: string, createdAt: Date){
+    constructor(uid: string, userName: string, bio: string, pfp: string, email: string, createdAt: Date) {
         this.uid = uid
-        this.userName= userName
+        this.userName = userName
         this.bio = bio
         this.pfp = pfp
         this.email = email
@@ -20,25 +21,25 @@ export class User {
 }
 
 interface PostProps {
-    id: number
+    id: string
     author: User
     desc: string
     pic: string
-    numLikes: number
+    numLikes?: number
     timeOfPost: number
     comments: CommentInfo[]
 }
 
-export class PostInfo implements PostProps{
-    id: number
+export class PostInfo implements PostProps {
+    id: string
     author: User
     desc: string
     pic: string
-    numLikes: number
+    numLikes?: number
     timeOfPost: number
     comments: CommentInfo[]
 
-    constructor(id: number, author: User, desc: string, pic: string, numLikes = 0, timeOfPost: number, comments: CommentInfo[] = []) {
+    constructor(id: string, author: User, desc: string, pic: string, numLikes = 0, timeOfPost: number, comments: CommentInfo[] = []) {
         this.id = id;
         this.author = author;
         this.desc = desc;
@@ -50,16 +51,24 @@ export class PostInfo implements PostProps{
 }
 
 
-export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, comments}: PostProps) {
-    
+export default function Post({ id, author, desc, pic, numLikes = 0, timeOfPost, comments }: PostProps) {
+
     const postInfo = new PostInfo(id, author, desc, pic, numLikes, timeOfPost, comments)
 
     const [likeButtonColor, setLikeButtonColor] = useState("white")
     const [isCommentsOpen, setIsCommentsOpen] = useState(false)
 
+    function handleLike() {
+        setLikeButtonColor(likeButtonColor === "white" ? "red" : "white");
+        console.log(id)
+        if (id){
+            addLike(id);
+        }
+    }
+
     return <>
         <div className="flex flex-col w-[25rem] w-max[31.25rem]">
-           
+
             <div className="flex items-center mb-2 space-x-3">
                 {/* profile picture */}
                 <div className=""><img className="w-[2.2rem] h-[2.2rem] rounded-full object-cover" src={author.pfp} alt="" /></div>
@@ -75,7 +84,7 @@ export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, c
 
             <div className="flex space-x-2 w-full my-3">
                 {/* heart */}
-                <button className={"cursor-pointer"} onClick={() => setLikeButtonColor(likeButtonColor === "white" ? "red" : "white")}>
+                <button className={"cursor-pointer"} onClick={handleLike}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill={likeButtonColor} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                     </svg>
@@ -88,7 +97,7 @@ export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, c
                     </svg>
                 </button>
                 <CommentsDialog isCommentsOpen={isCommentsOpen} setIsCommentsOpen={setIsCommentsOpen} postInfo={postInfo}></CommentsDialog >
-                
+
                 {/* share */}
                 <button className="cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -98,10 +107,10 @@ export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, c
                 </button>
             </div>
             {/* like count */}
-            <div className="mb-1 font-bold text-[1rem]">{likeButtonColor === "white" ? numLikes: numLikes+1} likes</div>
+            <div className="mb-1 font-bold text-[1rem]">{likeButtonColor === "white" ? numLikes : numLikes + 1} likes</div>
 
             <div className="">{desc}</div>
-            <hr className="border-gray-400 h-1 my-3"/>
+            <hr className="border-gray-400 h-1 my-3" />
 
         </div>
     </>
@@ -110,19 +119,19 @@ export default function Post({id, author, desc, pic, numLikes = 0, timeOfPost, c
 export function timeDifference(ms: number) {
     const now = Date.now();
     const diff = now - ms; // Difference in milliseconds
-    
+
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    
+
     if (days > 0) {
-      return `${days}d`;
+        return `${days}d`;
     } else if (hours > 0) {
-      return `${hours}h`;
+        return `${hours}h`;
     } else if (minutes > 0) {
-      return `${minutes}m`;
+        return `${minutes}m`;
     } else {
-      return `${seconds}s`;
+        return `${seconds}s`;
     }
 }
