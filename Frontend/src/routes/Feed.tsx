@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Navbar } from "../components/Navbar";
 import Post, { PostInfo, User } from "../components/Post";
 import { waitForFirebaseAuth } from "../lib/firebase/authHelpers";
-import { getUserInfo } from "../lib/firebase/database";
+import { getLikeCount, getUserInfo } from "../lib/firebase/database";
 import { CommentInfo } from "../components/Comment";
 import { collection, doc, getDoc, getDocFromServer, getDocs, limit, orderBy, query, QueryDocumentSnapshot, startAfter } from "firebase/firestore";
 import { db, storage } from "../lib/firebase/firebase";
@@ -52,7 +52,7 @@ export function Feed() {
                     id: postData.postID,
                     pic: postData.pic,
                     desc: postData.desc,
-                    numLikes: postData.numLikes,
+                    numLikes: 0,
                     timeOfPost: postData.createdAt,
                     comments: postData.comments || [],
                     author: userData,
@@ -107,10 +107,12 @@ export function Feed() {
             <Navbar></Navbar>
 
             <div className="flex flex-col size-full items-center my-4'">
-                {posts.map((post, index) => (
+                {posts.map((post) => (
+                   
                     <Post
                         key={post.id}
-                        id={post.id}
+                        // not passing post id
+                        id={post.id} 
                         author={post.author}
                         pic={post.pic}
                         desc={post.desc}
@@ -118,6 +120,7 @@ export function Feed() {
                         timeOfPost={post.timeOfPost}
                         comments={post.comments}
                     ></Post>
+                    
                 ))}
                 {loading && <p>Loading...</p>}
                 {!hasMore && <p>No more posts</p>}

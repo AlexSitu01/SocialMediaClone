@@ -2,24 +2,6 @@ import { waitForFirebaseAuth } from "./authHelpers";
 import { User as myUser } from "../../components/Post";
 import axios from "axios";
 
-
-
-// export const addUser = async () => {
-//   try {
-//     const user = await waitForFirebaseAuth()
-//     if (user) {
-//       await setDoc(doc(db, "users", user.uid), {
-//         uid: user.uid,
-//         email: user.email,
-//         createdAt: new Date()
-//       });
-//       console.log("User added to Firestore");
-//     }
-//   } catch (error) {
-//     console.error("Error adding user to Firestore:", error);
-//   }
-// };
-
 export const addUser = async () => {
   const user = await waitForFirebaseAuth();
   if (!user) return;
@@ -64,22 +46,9 @@ export async function addProfileSetup(userName: string, pfp: string, bio: string
   }
 }
 
-// export async function getUserInfo(): Promise<myUser | undefined> {
-//   const user = await waitForFirebaseAuth()
-//   if (user) {
-//     const userDocRef = doc(db, "users", user.uid);
-//     const userDoc = await getDoc(userDocRef);
-
-//     if (userDoc.exists()) {
-//       return userDoc.data() as myUser;
-//     }
-//   }
-// }
-
 export async function getUserInfo(): Promise<myUser| undefined>{
   const user = await waitForFirebaseAuth();
   const token = await user?.getIdToken()
-  console.log(token)
   if(user){
     const result = await axios.get("http://localhost:3000/api/getUser", {headers: {Authorization: 'Bearer '+ token}});
     return result.data as myUser
@@ -95,6 +64,22 @@ export async function createPost(imageFile: Blob, desc: string){
 
   if (user){
      await axios.post("http://localhost:3000/api/createPost", formData, {headers:{Authorization: 'Bearer '+ token}})
+  }
+
+}
+
+export async function addLike(postID:string){
+  const user = await waitForFirebaseAuth()
+  const token = await user?.getIdToken()
+  if(user){
+    await axios.post("http://localhost:3000/api/addLike", {postID: postID}, {headers:{Authorization: 'Bearer '+ token}})
+  }
+}
+export async function getLikeCount(postID:string): Promise<number|undefined>{
+  const user = await waitForFirebaseAuth();
+  const token = await user?.getIdToken()
+  if(user){
+     return await axios.get("http://localhost:3000/api/getLikeCount", {headers:{Authorization: 'Bearer '+ token}, params: postID} )
   }
 
 }
