@@ -75,11 +75,16 @@ export async function addLike(postID:string){
     await axios.post("http://localhost:3000/api/addLike", {postID: postID}, {headers:{Authorization: 'Bearer '+ token}})
   }
 }
-export async function getLikeCount(postID:string): Promise<number|undefined>{
+export async function getLikeCount(postID:string): Promise<{count: number, liked: boolean}|undefined>{
   const user = await waitForFirebaseAuth();
   const token = await user?.getIdToken()
   if(user){
-     return await axios.get("http://localhost:3000/api/getLikeCount", {headers:{Authorization: 'Bearer '+ token}, params: postID} )
+    const res = await axios.get("http://localhost:3000/api/getLikeCount", {headers:{Authorization: 'Bearer '+ token}, params:{postID}} )
+    let liked = false
+    if (res.data.liked){
+      (liked = true)
+    }
+    return {count: res.data.count, liked: liked }
   }
-
+  
 }
