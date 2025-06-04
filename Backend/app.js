@@ -62,15 +62,16 @@ async function createPost(imageBuffer, desc, uid) {
   const db = admin.firestore();
   const postsRef = db.collection("posts").doc();
   const currentTime = Date.now()
+  const invertedTime = -currentTime
   const url = await postImage(imageBuffer, "posts", postsRef.id);
   await postsRef.set({
     postID: postsRef.id, // still store it in the document
     authorID: uid,
     desc,
-    createdAt: currentTime,
+    createdAt: invertedTime,
     pic: url,
     numLikes: 0,
-  }), { merge: true };
+  },{ merge: true });
 
   console.log(`Post ${postsRef.id} created successfully.`);
 }
@@ -136,6 +137,20 @@ app.post("/api/createPost", upload.single("image"), async (req, res) => {
   }
   return res.status(200).json({ message: "Post was successfully made." })
 })
+app.delete("/api/removeLike", async(req, res)=>{
+  try{
+    const uid = req.user?.uid
+    const postID = req.query.postID;
+    const docID = postID+uid
+    const db = admin.firestore()
+    const likesRef = db.collection("likes").doc(docID)
+    likesRef.delete()
+    return res.status(200).json({message:"Good"})
+  }
+  catch{
+
+  }
+})
 
 app.post("/api/addLike", async (req, res) => {
   try {
@@ -151,7 +166,7 @@ app.post("/api/addLike", async (req, res) => {
       return res.status(400).json({ message: "postID is required" });
     }
     const db = admin.firestore()
-    const likesRef = db.collection("likes").doc();
+    const likesRef = db.collection("likes").doc(postID + uid);
     await likesRef.set({
       userID: uid,
       postID: postID,
@@ -182,13 +197,17 @@ app.get("/api/getLikeCount", async (req, res) => {
     let liked = false;
 
     snapshot.forEach(doc =>{
-      if(doc.data.userID === uid){
+      if(doc.data().userID === uid){
         liked = true
       }
     })
 
-    const likeCount = snapshot.size; // Count of documents
-    return res.status(200).json({ count: likeCount, liked: liked });
+    if(liked){
+      return res.status(200).json({ count: snapshot.size - 1, liked: liked });
+    }
+    else{
+      return res.status(200).json({ count: snapshot.size, liked: liked });
+    }
   } catch (error) {
     console.error("Error getting like count:", error);
     return res.status(500).json({ error: "Internal server error" });
