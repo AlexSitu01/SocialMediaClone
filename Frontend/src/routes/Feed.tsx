@@ -18,7 +18,7 @@ export function Feed() {
     const order = orderBy("createdAt")
 
 
-    const fetchData = async () => {
+    const fetchData = async (paginate: boolean) => {
         if (loading || !hasMore) {
             return
         }
@@ -61,12 +61,15 @@ export function Feed() {
                 };
 
                 newPosts.push(post);
-                console.log("Post: " + post.desc)
 
             }
 
             if (newPosts.length > 0) {
-                setPost((prev) => [...prev, ...newPosts])
+                if (paginate) {
+                    setPost((prev) => [...prev, ...newPosts])
+                } else {
+                    setPost(newPosts)
+                }
                 setLastPost(lastDoc)
 
             }
@@ -84,7 +87,10 @@ export function Feed() {
         }
 
     }
-    fetchData()
+    // fetchData()
+    useEffect(() => {
+        fetchData(false);
+    }, []);
     // get first group of data
  
     useEffect(() => {
@@ -93,7 +99,7 @@ export function Feed() {
                 window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
                 !loading
             ) {
-                fetchData();
+                fetchData(true);
             }
         }
         window.addEventListener("scroll", handleScroll);
@@ -113,14 +119,14 @@ export function Feed() {
                    
                     <Post
                         key={post.id}
-                        // not passing post id
                         id={post.id} 
                         author={post.author}
                         pic={post.pic}
                         desc={post.desc}
                         numLikes={post.numLikes}
-                        timeOfPost={post.timeOfPost}
+                        timeOfPost={-post.timeOfPost}
                         comments={post.comments}
+                        liked = {post.liked}
                     ></Post>
                     
                 ))}

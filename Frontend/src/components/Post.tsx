@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { CommentsDialog } from "./CommentsDialog"
 import { CommentInfo } from "./Comment"
-import { addLike } from "../lib/firebase/database"
+import { addLike, removeLike } from "../lib/firebase/database"
 
 export class User {
     uid: string
@@ -68,11 +68,22 @@ export default function Post({ id, author, desc, pic, numLikes = 0, timeOfPost, 
 
 
     function handleLike() {
-        setLikeButtonColor(likeButtonColor === "white" ? "red" : "white");
-        console.log(id)
+
         if (id) {
-            addLike(id);
+            // like a post
+            if (likeButtonColor == "white") {
+
+                addLike(id);
+
+            }
+            // unlike a post
+            if (likeButtonColor == "red") {
+                removeLike(id)
+            }
         }
+
+
+        setLikeButtonColor(likeButtonColor === "white" ? "red" : "white");
     }
 
     return <>

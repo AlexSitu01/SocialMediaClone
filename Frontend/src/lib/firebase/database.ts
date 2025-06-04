@@ -86,5 +86,13 @@ export async function getLikeCount(postID:string): Promise<{count: number, liked
     }
     return {count: res.data.count, liked: liked }
   }
+}
+
+export async function removeLike(postID:string){
+  const user = await waitForFirebaseAuth()
+  const token = await user?.getIdToken()
   
+  if(user){
+    await axios.delete("http://localhost:3000/api/removeLike", {headers:{Authorization: 'Bearer '+ token}, params:{postID}})
+  }
 }
